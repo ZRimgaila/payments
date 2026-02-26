@@ -1,6 +1,8 @@
 package com.zrimgaila.payments_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zrimgaila.payments_backend.general.PaymentStatus;
+import com.zrimgaila.payments_backend.general.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -12,12 +14,10 @@ import com.zrimgaila.payments_backend.validation.ValidatePaymentType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static com.zrimgaila.payments_backend.general.AppConstants.STATUS_ACTIVE;
-
 @ValidateBICCode
 @ValidateDetails
 @Builder
-@NoArgsConstructor @AllArgsConstructor @Setter @Getter
+@NoArgsConstructor @AllArgsConstructor
 @Entity @ToString
 @Table(name = "payment")
 public class Payment {
@@ -42,7 +42,8 @@ public class Payment {
 
     @JsonProperty("payment_type")
     @ValidatePaymentType // custom annotation
-    private String paymentType;
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
 
     // Used for EUR or USD payments
     private String details;
@@ -58,7 +59,8 @@ public class Payment {
     private LocalDateTime creationDate;
 
     @Column(nullable = false)
-    private String status = STATUS_ACTIVE;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status = PaymentStatus.ACTIVE;
 
     // prideti payment cancellation service
     @JsonProperty("cancellation_date")
@@ -67,4 +69,100 @@ public class Payment {
     @JsonProperty("cancellation_fee")
     @Column(precision = 19, scale = 2)
     private BigDecimal cancellationFee;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getDebtorIban() {
+        return debtorIban;
+    }
+
+    public void setDebtorIban(String debtorIban) {
+        this.debtorIban = debtorIban;
+    }
+
+    public String getCreditorIban() {
+        return creditorIban;
+    }
+
+    public void setCreditorIban(String creditorIban) {
+        this.creditorIban = creditorIban;
+    }
+
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public String getBICCode() {
+        return BICCode;
+    }
+
+    public void setBICCode(String BICCode) {
+        this.BICCode = BICCode;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCancellationDate() {
+        return cancellationDate;
+    }
+
+    public void setCancellationDate(LocalDateTime cancellationDate) {
+        this.cancellationDate = cancellationDate;
+    }
+
+    public BigDecimal getCancellationFee() {
+        return cancellationFee;
+    }
+
+    public void setCancellationFee(BigDecimal cancellationFee) {
+        this.cancellationFee = cancellationFee;
+    }
 }
