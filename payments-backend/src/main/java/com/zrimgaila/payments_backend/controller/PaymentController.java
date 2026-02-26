@@ -2,15 +2,18 @@ package com.zrimgaila.payments_backend.controller;
 
 import com.zrimgaila.payments_backend.DTO.CancelPaymentRequest;
 import com.zrimgaila.payments_backend.DTO.IdCancellationFeeDTO;
+import com.zrimgaila.payments_backend.general.PaymentStatus;
 import com.zrimgaila.payments_backend.model.Payment;
 import com.zrimgaila.payments_backend.service.PaymentService;
+import com.zrimgaila.payments_backend.service.PaymentServiceIfc;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +26,7 @@ import java.util.Set;
 public class PaymentController {
 
     @Autowired
-    private PaymentService service;
+    private PaymentServiceIfc service;
 
     @Autowired
     private Validator validator;
@@ -46,7 +49,7 @@ public class PaymentController {
     }
 
     @PutMapping("/payments/{id}/cancel")
-    public ResponseEntity<?> cancelPayment(@PathVariable int id){
+    public ResponseEntity<String> cancelPayment(@PathVariable int id){
         Payment existingPayment = service.getPaymentById(id);
         if(existingPayment != null){
             // Validating cancellation
@@ -73,12 +76,12 @@ public class PaymentController {
     }
 
     @GetMapping("/payments/{id}/cancellationFee")
-    public ResponseEntity<?> getPaymentCancellationFeeById(@PathVariable int id){
-        Optional<IdCancellationFeeDTO> pair = service.getPaymentCancellationFeeById(id);
-        if(pair.isPresent()){
+    public ResponseEntity<IdCancellationFeeDTO> getPaymentCancellationFeeById(@PathVariable int id){
+        IdCancellationFeeDTO pair = service.getPaymentCancellationFeeById(id);
+        if(pair!=null){
             return new ResponseEntity<>(pair, HttpStatus.OK);
         } else{
-            return new ResponseEntity<>("Unable to find " + id + " payment", HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no such payment (No." + id + ") with status cancelled");
         }
     }
 }

@@ -4,7 +4,7 @@ How to start the application?
 - After completion backend (http://localhost:8081/payments) and frontend (http://localhost:3000/payments) should be accessible.
 
 Requirements:
-- installed Docker Desktop
+- installed and running Docker Desktop
 
 Dadatabse can be accessed using these credentials:
 host: localhost

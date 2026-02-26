@@ -1,30 +1,33 @@
 package com.zrimgaila.payments_backend.service;
 
 import com.zrimgaila.payments_backend.DTO.IdCancellationFeeDTO;
+import com.zrimgaila.payments_backend.general.PaymentStatus;
 import com.zrimgaila.payments_backend.model.Payment;
 import com.zrimgaila.payments_backend.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static com.zrimgaila.payments_backend.general.AppConstants.*;
 
 @Service
-public class PaymentService {
+@Transactional(rollbackFor = Exception.class)
+public class PaymentService implements PaymentServiceIfc{
 
     @Autowired
     private PaymentRepository repo;
 
+    @Transactional(readOnly = true)
     public Payment getPaymentById(int id) {
         return repo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public List<Payment> getAllPayments() {
         return repo.findAll();
     }
@@ -39,30 +42,32 @@ public class PaymentService {
 
         BigDecimal k = BigDecimal.valueOf(0);
         switch(payment.getPaymentType()) {
-            case PAYMENT_TYPE_EUR:
+            case EUR:
                 k = CANCELLATION_FEE_FOR_EUR;
                 break;
-            case PAYMENT_TYPE_USD:
+            case USD:
                 k = CANCELLATION_FEE_FOR_USD;
                 break;
-            case PAYMENT_TYPE_EUR_AND_USD:
+            case EUR_AND_USD:
                 k = CANCELLATION_FEE_FOR_EUR_AND_USD;
                 break;
         }
 
         payment.setCancellationDate(currentDate);
         payment.setCancellationFee(hours.multiply(k));
-        payment.setStatus(STATUS_CANCELLED);
+        payment.setStatus(PaymentStatus.CANCELLED);
         repo.save(payment);
 
         return "Payment " + payment.getId() + " successfully cancelled!";
     }
 
+    @Transactional(readOnly = true)
     public List<Payment> getAllActivePayments() {
-        return repo.findByStatusOrderByAmountDesc(STATUS_ACTIVE);
+        return repo.findByStatusOrderByAmountDesc(String.valueOf(PaymentStatus.ACTIVE));
     }
 
-    public Optional<IdCancellationFeeDTO> getPaymentCancellationFeeById(int id) {
-        return repo.findIdAndCancellationFeeById(id);
+    @Transactional(readOnly = true)
+    public IdCancellationFeeDTO getPaymentCancellationFeeById(int id) {
+        return repo.findIdAndCancellationFeeById(id, PaymentStatus.CANCELLED);
     }
 }
