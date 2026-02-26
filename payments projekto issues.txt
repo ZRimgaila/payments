@@ -1,7 +1,0 @@
-  Nėra testų
-+ Kontroleryje ne visur apibrėžtas response tipas
-+ validatoriuose naudojami raw String, nors kitoj vietoj buvo apibrėžtos konstantos
-+ vietoj konstantų galėtų būti enums
-+  validatorių kodas galėtų būti patobulintas, daug if'ų
-+ nėra abstrakcijų - iškart naudojami servisai su implementacijomis
-+ nenaudojamos transakcijos
