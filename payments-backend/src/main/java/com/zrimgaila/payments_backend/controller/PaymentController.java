@@ -70,9 +70,24 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/payments/active")
-    public ResponseEntity<List<Payment>> getAllActivePayments(){
-        return ResponseEntity.ok(service.getAllActivePayments());
+    @GetMapping("/payments/active&OrderByAmount")
+    public ResponseEntity<List<Payment>> getActivePaymentsOrderByAmount(){
+        return ResponseEntity.ok(service.getPaymentsByStatusOrderByAmount(PaymentStatus.ACTIVE));
+    }
+
+    @GetMapping("/payments/active&OrderByCreationDate")
+    public ResponseEntity<List<Payment>> getActivePaymentsOrderByCreationDate(){
+        return ResponseEntity.ok(service.getPaymentsByStatusOrderByCreationDate(PaymentStatus.ACTIVE));
+    }
+
+    @GetMapping("/payments/cancelled&OrderByAmount")
+    public ResponseEntity<List<Payment>> getCancelledPaymentsOrderByAmount(){
+            return ResponseEntity.ok(service.getPaymentsByStatusOrderByAmount(PaymentStatus.CANCELLED));
+    }
+
+    @GetMapping("/payments/cancelled&OrderByCreationDate")
+    public ResponseEntity<List<Payment>> getCancelledPaymentsOrderByCreationDate(){
+        return ResponseEntity.ok(service.getPaymentsByStatusOrderByCreationDate(PaymentStatus.CANCELLED));
     }
 
     @GetMapping("/payments/{id}/cancellationFee")

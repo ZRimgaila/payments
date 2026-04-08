@@ -12,7 +12,8 @@ services:
       - "5433:5432"
 
   backend:
-    build: ./payments-backend
+    build:
+      context: ./payments-backend
     depends_on:
       - db
     environment:
@@ -24,12 +25,15 @@ services:
       - "8081:8081"
       - "5005:5005"
 
+
   frontend:
-    build: ./payments-frontend
+    build: 
+      context: ./payments-frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
+
 
 volumes:
   db-data:

@@ -12,7 +12,7 @@ import com.zrimgaila.payments_backend.validation.ValidateDetails;
 import com.zrimgaila.payments_backend.validation.ValidatePaymentType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @ValidateBICCode
 @ValidateDetails
@@ -56,7 +56,7 @@ public class Payment {
     // Additional fields
     @JsonProperty("creation_date")
     @CreationTimestamp
-    private LocalDateTime creationDate;
+    private OffsetDateTime creationDate;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,7 +64,7 @@ public class Payment {
 
     // prideti payment cancellation service
     @JsonProperty("cancellation_date")
-    private LocalDateTime cancellationDate;
+    private OffsetDateTime cancellationDate;
 
     @JsonProperty("cancellation_fee")
     @Column(precision = 19, scale = 2)
@@ -134,11 +134,11 @@ public class Payment {
         this.BICCode = BICCode;
     }
 
-    public LocalDateTime getCreationDate() {
+    public OffsetDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -150,11 +150,11 @@ public class Payment {
         this.status = status;
     }
 
-    public LocalDateTime getCancellationDate() {
+    public OffsetDateTime getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(LocalDateTime cancellationDate) {
+    public void setCancellationDate(OffsetDateTime cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 

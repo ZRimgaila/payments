@@ -14,7 +14,10 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     @Query("SELECT p FROM Payment p WHERE p.status = ?1 ORDER BY p.amount DESC")
-    List<Payment> findByStatusOrderByAmountDesc(String status);
+    List<Payment> findByStatusOrderByAmount(PaymentStatus status);
+
+    @Query("SELECT p FROM Payment p WHERE p.status = ?1 ORDER BY p.creationDate DESC")
+    List<Payment> findByStatusOrderByCreationDate(PaymentStatus status);
 
     @Query("SELECT p.id, p.cancellationFee FROM Payment p WHERE p.id = ?1 and p.status= :status")
     IdCancellationFeeDTO findIdAndCancellationFeeById(int id, @Param("status") PaymentStatus status);

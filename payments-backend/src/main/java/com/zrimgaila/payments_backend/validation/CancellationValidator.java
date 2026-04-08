@@ -6,7 +6,7 @@ import com.zrimgaila.payments_backend.model.Payment;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import static com.zrimgaila.payments_backend.general.PaymentStatus.*;
 
@@ -20,7 +20,7 @@ public class CancellationValidator implements ConstraintValidator<ValidateCancel
         } else{
             Payment payment = request.getPayment();
             boolean isActive = ACTIVE.equals(payment.getStatus());
-            boolean isCreatedToday = payment.getCreationDate().getDayOfMonth() == LocalDateTime.now().getDayOfMonth();
+            boolean isCreatedToday = payment.getCreationDate().getDayOfMonth() == OffsetDateTime.now().getDayOfMonth();
             if(!isActive){
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("The payment is already cancelled")

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static com.zrimgaila.payments_backend.general.AppConstants.*;
@@ -37,7 +37,7 @@ public class PaymentService implements PaymentServiceIfc{
     }
 
     public String cancelPayment(Payment payment) {
-        LocalDateTime currentDate = LocalDateTime.now();
+        OffsetDateTime currentDate = OffsetDateTime.now();
         BigDecimal hours = BigDecimal.valueOf(Duration.between(payment.getCreationDate(), currentDate).toHours());
 
         BigDecimal k = BigDecimal.valueOf(0);
@@ -62,8 +62,13 @@ public class PaymentService implements PaymentServiceIfc{
     }
 
     @Transactional(readOnly = true)
-    public List<Payment> getAllActivePayments() {
-        return repo.findByStatusOrderByAmountDesc(String.valueOf(PaymentStatus.ACTIVE));
+    public List<Payment> getPaymentsByStatusOrderByAmount(PaymentStatus paymentStatus) {
+        return repo.findByStatusOrderByAmount(paymentStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Payment> getPaymentsByStatusOrderByCreationDate(PaymentStatus paymentStatus) {
+        return repo.findByStatusOrderByCreationDate(paymentStatus);
     }
 
     @Transactional(readOnly = true)
